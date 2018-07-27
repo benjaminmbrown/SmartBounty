@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {VortexGate, VortexWeb3Loaded, VortexWeb3LoadError, VortexWeb3NetworkError, VortexWeb3Loading, VortexWeb3Locked, VortexMetamaskLoader} from "vort_x-components";
 import SimpleStorage from '../build/contracts/SimpleStorage.json'
+import SmartBounty from '../build/contracts/SmartBounty.json'
 import {Grid, Col, Panel} from 'react-bootstrap';
 import Web3 from 'web3';
 
@@ -23,9 +24,9 @@ class App extends Component {
             <VortexGate
                 contracts={{
                     type: 'truffle',
-                    truffle_contracts: [SimpleStorage],
-                    preloaded_contracts: ["SimpleStorage"],
-                    network_contracts: [SimpleStorage]
+                    truffle_contracts: [SimpleStorage,SmartBounty],
+                    preloaded_contracts: ["SimpleStorage", "SmartBounty"],
+                    network_contracts: [SimpleStorage,SmartBounty]
                 }}
                 loader={VortexMetamaskLoader(Web3)}
                 ipfs_config={{
