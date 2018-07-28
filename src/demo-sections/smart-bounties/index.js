@@ -31,7 +31,7 @@ class ContractCallReturnContainer extends React.Component {
     render() {
         return (<div>
             <p>Create Bounty (customers only)</p>
-            <p>Bounties {this.props.result}</p>
+            <h3>Bounties: <strong> {this.props.result}</strong></h3>
             <form onSubmit={this.bountyAmount}>
                 <FieldGroup
                     id="bountyN"

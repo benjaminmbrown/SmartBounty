@@ -114,8 +114,6 @@ contract SmartBounty is BountyFactory {
         return result;
     }
 
-    
-
     function getAllBounties() public view returns (uint[]){
         uint[] memory result = new uint[](bounties.length);
         //Bounty[] memory result = new Bounty[](bounties.length);
