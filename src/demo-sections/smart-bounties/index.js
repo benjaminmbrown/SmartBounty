@@ -30,6 +30,7 @@ class ContractCallReturnContainer extends React.Component {
 
     render() {
         return (<div>
+            <p>Create Bounty (customers only)</p>
             <p>Bounties {this.props.result}</p>
             <form onSubmit={this.bountyAmount}>
                 <FieldGroup
@@ -114,14 +115,14 @@ class BountyCallReturnContainer extends React.Component {
 
     render() {
         return (<div>
-            <p>Take{this.props.result}</p>
+             <p> Initiated? {this.props.result}</p>
             <form onSubmit={this.bountyId}>
                 <FieldGroup
                     id="bountyI"
                     type="number"
                     label="Bounty Id"
                     placeholder="Bounty ID"
-                    inputRef={input => this.bountyN = input}
+                    inputRef={input => this.bountyI = input}
                 />
                 <Button type="submit">Take Bounty</Button>
             </form>
@@ -129,12 +130,11 @@ class BountyCallReturnContainer extends React.Component {
     }
 }
 
-
 class BountiesContainter extends React.Component {
     constructor(props) {
         super(props);
         this.props.contract.instance.vortexMethods.isBountyInitiated.data(
-            0,
+            1,
             {from: this.props.web3.coinbase}
         );
         Vortex.get().subscribeEvent(
@@ -148,11 +148,11 @@ class BountiesContainter extends React.Component {
                     this.props.contract_name, 
                     this.props.contract_address),
                      "isBountyInitiated", 
-                     0,
+                     1,
                      {from: this.props.web3.coinbase}),
                 update: (bountyId) => {
                     this.props.contract.instance.vortexMethods.initiateBounty.send(
-                         bountyId, {from: this.props.web3.coinbase, gas: 1030000}
+                         bountyId, {from: this.props.web3.coinbase, gas: 6654755}
                     );
                 }
             }
@@ -163,7 +163,81 @@ class BountiesContainter extends React.Component {
     render() {
         if (this.props.contract) {
             return <Panel bsStyle="primary">
-                <Panel.Heading>Initiate Bounty</Panel.Heading>
+                <Panel.Heading>Initiate Bounty (contractors only)</Panel.Heading>
+                <Panel.Body>
+                    <this.resultContainer/>
+                </Panel.Body>
+            </Panel>;
+        } else
+            return <div/>;
+    }
+
+}
+
+class CompleteBountyCallReturnContainer extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.bountyId = this.bountyId.bind(this);
+    
+    }
+
+    bountyId(event){
+        event.preventDefault();
+        this.props.update(this.bountyI.value);
+    }
+
+    render() {
+        return (<div>
+             <p> Completed? {this.props.result}</p>
+            <form onSubmit={this.bountyId}>
+                <FieldGroup
+                    id="bountyI"
+                    type="number"
+                    label="Bounty Id"
+                    placeholder="Bounty ID"
+                    inputRef={input => this.bountyI = input}
+                />
+                <Button type="submit">Complete Bounty</Button>
+            </form>
+        </div>)
+    }
+}
+
+class CompleteBountiesContainter extends React.Component {
+    constructor(props) {
+        super(props);
+        this.props.contract.instance.vortexMethods.isBountyCompleted.data(
+            1,
+            {from: this.props.web3.coinbase}
+        );
+        Vortex.get().subscribeEvent(
+            "BountyCompleted", 
+            this.props.contract_name, 
+            this.props.contract_address);
+
+        const mapStateToProps = (state) => {
+            return {
+                result: callContract(getContract(state, 
+                    this.props.contract_name, 
+                    this.props.contract_address),
+                     "isBountyCompleted", 
+                     1,
+                     {from: this.props.web3.coinbase}),
+                update: (bountyId) => {
+                    this.props.contract.instance.vortexMethods.completeBounty.send(
+                         bountyId, {from: this.props.web3.coinbase, gas: 6654755}
+                    );
+                }
+            }
+        };
+        this.resultContainer = connect(CompleteBountyCallReturnContainer, mapStateToProps);
+    }
+
+    render() {
+        if (this.props.contract) {
+            return <Panel bsStyle="primary">
+                <Panel.Heading>Complete Bounty (contractors only)</Panel.Heading>
                 <Panel.Body>
                     <this.resultContainer/>
                 </Panel.Body>
@@ -175,6 +249,157 @@ class BountiesContainter extends React.Component {
 }
 
 
+class VerifyBountyCallReturnContainer extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.bountyId = this.bountyId.bind(this);
+    
+    }
+
+    bountyId(event){
+        event.preventDefault();
+        this.props.update(this.bountyI.value);
+    }
+
+    render() {
+        return (<div>
+             <p> Verified? {this.props.result}</p>
+            <form onSubmit={this.bountyId}>
+                <FieldGroup
+                    id="bountyI"
+                    type="number"
+                    label="Bounty Id"
+                    placeholder="Bounty ID"
+                    inputRef={input => this.bountyI = input}
+                />
+                <Button type="submit">Verify Bounty</Button>
+            </form>
+        </div>)
+    }
+}
+
+class VerifyBountiesContainter extends React.Component {
+    constructor(props) {
+        super(props);
+        this.props.contract.instance.vortexMethods.isBountyVerified.data(
+            1,
+            {from: this.props.web3.coinbase}
+        );
+        Vortex.get().subscribeEvent(
+            "BountyVerified", 
+            this.props.contract_name, 
+            this.props.contract_address);
+
+        const mapStateToProps = (state) => {
+            return {
+                result: callContract(getContract(state, 
+                    this.props.contract_name, 
+                    this.props.contract_address),
+                     "isBountyVerified", 
+                     1,
+                     {from: this.props.web3.coinbase}),
+                update: (bountyId) => {
+                    this.props.contract.instance.vortexMethods.verifyBounty.send(
+                         bountyId, {from: this.props.web3.coinbase, gas: 6654755}
+                    );
+                }
+            }
+        };
+        this.resultContainer = connect(VerifyBountyCallReturnContainer, mapStateToProps);
+    }
+
+    render() {
+        if (this.props.contract) {
+            return <Panel bsStyle="primary">
+                <Panel.Heading>Verify Bounty (customers only)</Panel.Heading>
+                <Panel.Body>
+                    <this.resultContainer/>
+                </Panel.Body>
+            </Panel>;
+        } else
+            return <div/>;
+    }
+
+}
+
+class WithdrawBountyCallReturnContainer extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.bountyId = this.bountyId.bind(this);
+    
+    }
+
+    bountyId(event){
+        event.preventDefault();
+        this.props.update(this.bountyI.value);
+    }
+
+    render() {
+        return (<div>
+             <p> BountyBalnace {this.props.result}</p>
+            <form onSubmit={this.bountyId}>
+                <FieldGroup
+                    id="bountyI"
+                    type="number"
+                    label="Bounty Id"
+                    placeholder="Bounty ID"
+                    inputRef={input => this.bountyI = input}
+                />
+                <Button type="submit">Withdraw Bounty</Button>
+            </form>
+        </div>)
+    }
+}
+
+class WithdrawBountiesContainter extends React.Component {
+    constructor(props) {
+        super(props);
+        this.props.contract.instance.vortexMethods.withdrawBounty.data(
+            1,
+            {from: this.props.web3.coinbase}
+        );
+        Vortex.get().subscribeEvent(
+            "BountyVerified", 
+            this.props.contract_name, 
+            this.props.contract_address);
+
+        const mapStateToProps = (state) => {
+            return {
+                result: callContract(getContract(state, 
+                    this.props.contract_name, 
+                    this.props.contract_address),
+                     "bountyBalance", 
+                     1,
+                     {from: this.props.web3.coinbase}),
+                update: (bountyId) => {
+                    this.props.contract.instance.vortexMethods.withdrawBounty.send(
+                         bountyId, {from: this.props.web3.coinbase, gas: 6654755}
+                    );
+                }
+            }
+        };
+        this.resultContainer = connect(VerifyBountyCallReturnContainer, mapStateToProps);
+    }
+
+    render() {
+        if (this.props.contract) {
+            return <Panel bsStyle="primary">
+                <Panel.Heading>Verify Bounty (customers only)</Panel.Heading>
+                <Panel.Body>
+                    <this.resultContainer/>
+                </Panel.Body>
+            </Panel>;
+        } else
+            return <div/>;
+    }
+
+}
+
+
+
+
 export class SmartBounties extends React.Component {
 
     render() {
@@ -183,6 +408,10 @@ export class SmartBounties extends React.Component {
             <Panel.Body>
                 <VortexContractsList element={ContractsContainer} contract_name="SmartBounty"/>
                 <VortexContractsList element={BountiesContainter} contract_name="SmartBounty"/>
+                <VortexContractsList element={CompleteBountiesContainter} contract_name="SmartBounty"/>
+                <VortexContractsList element={VerifyBountiesContainter} contract_name="SmartBounty"/>
+                {/* <VortexContractsList element={WithdrawBountiesContainter} contract_name="SmartBounty"/>
+            */}
             </Panel.Body>
         </Panel>
 

@@ -10,6 +10,7 @@ contract SmartBounty is BountyFactory {
     event BountyTaken(address addr, uint bountyId);
     event BountyCompleted(address addr, uint bountyId);
     event BountyVerified(address addr, uint bountyId);
+    event BountyWithdraw(address addr, uint bountyId);
 
     modifier ownerOf(uint _bountyId) {
         require(msg.sender == bountyToOwner[_bountyId]);
@@ -47,6 +48,19 @@ contract SmartBounty is BountyFactory {
     function isBountyInitiated(uint _bountyId) public view returns(bool){
         return bounties[_bountyId].taken;
     }
+    function isBountyCompleted(uint _bountyId) public view returns(bool){
+        return bounties[_bountyId].complete;
+    }
+    function isBountyVerified(uint _bountyId) public view returns(bool){
+        return bounties[_bountyId].verified;
+    }
+
+    function getBountyStates(uint _bountyId) public view returns (bool,bool, bool){
+        bool init = bounties[_bountyId].taken;
+        bool complete = bounties[_bountyId].complete;
+        bool verified = bounties[_bountyId].verified;
+        return (init, complete, verified);
+    }
 
     function completeBounty(uint _bountyId) public returns(bool){
         require(
@@ -76,6 +90,12 @@ contract SmartBounty is BountyFactory {
         uint amount = bounties[_bountyId].amount;
         bounties[_bountyId].amount = 0;
         msg.sender.transfer(amount);
+        emit BountyWithdraw(msg.sender, _bountyId);
+        return true;
+    }
+
+    function bountyBalance(uint _bountyId) public view returns(uint){
+        return bounties[_bountyId].amount;
     }
 
     function getBountyAmtById(uint _bountyId) public view returns(uint){

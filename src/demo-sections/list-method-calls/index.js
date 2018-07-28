@@ -5,7 +5,7 @@ export class SingleCall extends React.Component {
     render() {
         return (
             <li>
-                Result is {this.props.result}
+               {this.props.result}
             </li>
         )
     }
