@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import {VortexGate, VortexWeb3Loaded, VortexWeb3LoadError, VortexWeb3NetworkError, VortexWeb3Loading, VortexWeb3Locked, VortexMetamaskLoader} from "vort_x-components";
-import SimpleStorage from '../build/contracts/SimpleStorage.json'
 import SmartBounty from '../build/contracts/SmartBounty.json'
 import {Grid, Col, Panel} from 'react-bootstrap';
 import Web3 from 'web3';
@@ -15,6 +14,7 @@ import {Overlay} from "./demo-sections/left-overlay";
 import {FeedNotifications} from "./demo-sections/feed-notifications";
 import {ListTransactions} from "./demo-sections/list-transactions";
 import {ListContracts} from "./demo-sections/list-contracts";
+import {SmartBounties} from "./demo-sections/smart-bounties";
 import {AccountFollower} from "./demo-sections/account_follower";
 import {IPFSFetcher} from './demo-sections/ipfs-fetcher';
 
@@ -24,9 +24,9 @@ class App extends Component {
             <VortexGate
                 contracts={{
                     type: 'truffle',
-                    truffle_contracts: [SimpleStorage,SmartBounty],
-                    preloaded_contracts: ["SimpleStorage", "SmartBounty"],
-                    network_contracts: [SimpleStorage,SmartBounty]
+                    truffle_contracts: [SmartBounty],
+                    preloaded_contracts: ["SmartBounty"],
+                    network_contracts: [SmartBounty]
                 }}
                 loader={VortexMetamaskLoader(Web3)}
                 ipfs_config={{
@@ -50,32 +50,35 @@ class App extends Component {
                             <main className="container">
                                 <div className="pure-g">
                                     <div className="pure-u-1-1">
-                                        <h1>VortΞx Demo Loaded !</h1>
+                                        <h1>SmartBounty DΞMO</h1>
                                     </div>
                                 </div>
                                 <Grid>
                                     <Col xs={6}>
-                                        <TransactionPanel/>
+                                    <SmartBounties/>
                                     </Col>
                                     <Col xs={6}>
-                                        <ListTransactions/>
+                                    <ListTransactions/>
+
+                                  
                                     </Col>
                                     <Col xs={6}>
-                                        <ListContracts/>
+                                   
+                                    <Panel bsStyle="primary">
+                                            <Panel.Heading>Your Balance</Panel.Heading>
+                                            <Panel.Body>
+                                                <AccountFollower/>
+                                            </Panel.Body>
+                                        </Panel> 
                                     </Col>
-                                    <Col xs={6}>
+                                    {/* <Col xs={6}>
                                         <IPFSFetcher/>
-                                    </Col>
+                                    </Col> */}
                                     <Col xs={6}>
                                         <Overlay/>
                                     </Col>
                                     <Col xs={6}>
-                                        <Panel bsStyle="primary">
-                                            <Panel.Heading>Example #6: Instant Balances</Panel.Heading>
-                                            <Panel.Body>
-                                                <AccountFollower/>
-                                            </Panel.Body>
-                                        </Panel>
+                                    <TransactionPanel/>
                                     </Col>
                                 </Grid>
                             </main>

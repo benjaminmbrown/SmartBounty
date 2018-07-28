@@ -45,7 +45,7 @@ export class ListTransactions extends React.Component {
 
     render() {
         return <Panel>
-            <Panel.Heading>Example #2: Very REACTive data !</Panel.Heading>
+            <Panel.Heading>Transactions</Panel.Heading>
             <Panel.Body style={{maxHeight: 400, overflow: 'scroll'}}>
                 <VortexTransactionsList element={TxContainer}/>
             </Panel.Body>

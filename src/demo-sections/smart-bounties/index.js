@@ -19,26 +19,28 @@ class ContractCallReturnContainer extends React.Component {
 
     constructor(props) {
         super(props);
-        this.newValue = this.newValue.bind(this);
+        this.bountyName = this.bountyName.bind(this);
+    
     }
 
-    newValue(event) {
+    bountyName(event){
         event.preventDefault();
-        this.props.update(this.newVal.valueAsNumber);
+        console.log('this.bountyN',this.bountyN.value);
+        this.props.update(this.bountyN.value);
     }
 
     render() {
         return (<div>
-            <p>Current value {this.props.result}</p>
-            <form onSubmit={this.newValue}>
+            <p>Bounties {this.props.result}</p>
+            <form onSubmit={this.bountyName}>
                 <FieldGroup
-                    id="newVal"
-                    type="number"
-                    label="Change Stored Value"
-                    placeholder="Enter New Value"
-                    inputRef={input => this.newVal = input}
+                    id="bountyN"
+                    type="text"
+                    label="Bounty Name"
+                    placeholder="Enter Bounty Name"
+                    inputRef={input => this.bountyN = input}
                 />
-                <Button type="submit">Send !</Button>
+                <Button type="submit">Create </Button>
             </form>
         </div>)
     }
@@ -50,20 +52,21 @@ class ContractsContainer extends React.Component {
         super(props);
         this.props.contract.instance.vortexMethods.get.data({from: this.props.web3.coinbase});
         Vortex.get().subscribeEvent(
-            "Test", 
+            "CreateBounty", 
             this.props.contract_name, 
             this.props.contract_address);
+
         const mapStateToProps = (state) => {
             return {
                 result: callContract(getContract(state, 
                     this.props.contract_name, 
-                    this.props.contract_address), 
-                    "get", 
-                    {from: this.props.web3.coinbase}),
-                update: (newValue) => {
-                    this.props.contract.instance.vortexMethods.set.send(
-                        newValue, 
-                        {from: this.props.web3.coinbase, gas: 100000});
+                    this.props.contract_address),
+                     "getBountyCount", 
+                     {from: this.props.web3.coinbase}),
+                update: (bountyName) => {
+                    this.props.contract.instance.vortexMethods.createBounty.send(
+                        bountyName, {from: this.props.web3.coinbase, gas: 1030000}
+                    );
                 }
             }
         };
@@ -75,16 +78,15 @@ class ContractsContainer extends React.Component {
             return <Panel bsStyle="primary">
                 <Panel.Heading>{this.props.contract_name} : {this.props.contract_address}</Panel.Heading>
                 <Panel.Body>
-                    <VortexMethodCallList container={CallContainer} 
-                    element={SingleCall} methodName="times" 
+                    {/* <VortexMethodCallList 
+                    container={CallContainer} 
+                    element={SingleCall} 
+                    methodName="getBountiesByOwner" 
                     contractName={this.props.contract_name} 
-                    contractAddress={this.props.contract_address} arguments={
-                        [
-                            [2, {from: this.props.web3.coinbase}],
-                            [3, {from: this.props.web3.coinbase}],
-                            [4, {from: this.props.web3.coinbase}]
-                        ]
-                    }/>
+                    contractAddress={this.props.contract_address} 
+                    arguments={[
+                        [this.props.web3.coinbase,{from:this.props.web3.coinbase}]
+                        ]}/> */}
                     <this.resultContainer/>
                 </Panel.Body>
             </Panel>;
@@ -93,7 +95,7 @@ class ContractsContainer extends React.Component {
     }
 }
 
-export class ListContracts extends React.Component {
+export class SmartBounties extends React.Component {
 
     render() {
         return <Panel>

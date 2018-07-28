@@ -15,7 +15,7 @@ export class CallContainer extends React.Component {
     render() {
         return (
             <Panel bsStyle="primary">
-                <Panel.Heading>Example #4: Constant Method Call List</Panel.Heading>
+                <Panel.Heading>Method Call List</Panel.Heading>
                 <Panel.Body>
                     <div>
                         <ul>
