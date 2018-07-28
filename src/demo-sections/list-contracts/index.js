@@ -87,7 +87,6 @@ export class ListContracts extends React.Component {
         return <Panel>
             <Panel.Heading>Example #3: List all of your contracts very easily !</Panel.Heading>
             <Panel.Body>
-                <VortexContractsList element={ContractsContainer} contract_name="SimpleStorage"/>
                 <VortexContractsList element={ContractsContainer} contract_name="SmartBounty"/>
             </Panel.Body>
         </Panel>

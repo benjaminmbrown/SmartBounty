@@ -1,21 +1,27 @@
-pragma solidity 0.4.24;
+pragma solidity ^0.4.24;
 
-contract SmartBounty {
-  uint storedData;
-  event Test(address indexed _who);
+import "./BountyFactory.sol";
 
-  function set(uint x) public {
-    if (x == 5)
-      revert();
-    storedData = x;
-    emit Test(msg.sender);
-  }
+contract SmartBounty is BountyFactory {
 
-  function times(uint x) public view returns (uint) {
-    return storedData * x;
-  }
+    constructor () public {}
 
-  function get() public view returns (uint) {
-    return storedData;
-  }
+    modifier ownerOf(uint _bountyId) {
+        require(msg.sender == bountyToOwner[_bountyId]);
+        _;
+    }
+
+    function getBountiesByOwner(address _owner) external view returns(uint[]) {
+        uint[] memory result = new uint[](ownerBountyCount[_owner]);
+        uint counter = 0;
+        for (uint i = 0; i < bounties.length; i++) {
+            if (bountyToOwner[i] == _owner) {
+                result[counter] = i;
+                counter++;
+            }
+        }
+        return result;
+    }
+
+
 }
