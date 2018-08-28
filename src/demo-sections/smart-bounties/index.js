@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Vortex, callContract, getContract} from "vort_x";
+import {Vortex, callContract, getContract, getEvents} from "vort_x";
 import {VortexContractsList, connect, VortexMethodCallList} from 'vort_x-components';
 import {FormGroup, ControlLabel, FormControl, HelpBlock, Button} from 'react-bootstrap';
 import {Panel} from "react-bootstrap";
@@ -15,17 +15,26 @@ function FieldGroup({ id, label, help, ...props }) {
     );
 }
 
+/* Take the props and populate bounty info*/
+
+
+
 class ContractCallReturnContainer extends React.Component {
 
     constructor(props) {
         super(props);
         this.bountyAmount = this.bountyAmount.bind(this);
-    
+        this.bounties = this.bounties.bind(this);
     }
 
     bountyAmount(event){
         event.preventDefault();
         this.props.update(this.bountyN.value);
+    }
+
+    bounties(event){
+        event.preventDefault();
+        this.props.bounties();
     }
 
     render() {
@@ -42,6 +51,12 @@ class ContractCallReturnContainer extends React.Component {
                 />
                 <Button type="submit">Create </Button>
             </form>
+            <h3>Bounty List
+                {this.props.bounties}
+            </h3>
+            <h3>Events:
+                {this.props.events}
+            </h3>
         </div>)
     }
 }
@@ -53,6 +68,11 @@ class ContractsContainer extends React.Component {
         this.props.contract.instance.vortexMethods.getBountyCount.data(
             {from: this.props.web3.coinbase}
         );
+
+        this.props.contract.instance.vortexMethods.getAllBounties.data(
+            {from: this.props.web3.coinbase}
+        );
+
         
         Vortex.get().subscribeEvent(
             "BountyCreated", 
@@ -60,17 +80,34 @@ class ContractsContainer extends React.Component {
             this.props.contract_address
         );
 
+
         const mapStateToProps = (state) => {
+            console.log('State:',state);
             return {
                 result: callContract(getContract(state, 
                     this.props.contract_name, 
                     this.props.contract_address),
                      "getBountyCount", 
-                     {from: this.props.web3.coinbase}),
+                     {from: this.props.web3.coinbase})
+                     ,
                 update: () => {
                     this.props.contract.instance.vortexMethods.createBounty.send(
                         {from: this.props.web3.coinbase, gas: 1030000}
                     );
+                },
+                bounties: callContract(getContract(state, 
+                        this.props.contract_name, 
+                        this.props.contract_address),
+                         "getAllBounties", 
+                         {from: this.props.web3.coinbase}),
+                events:()=>{
+                    getEvents(state, {
+                        event_name:"BountyCreated", 
+                        contract_name: this.props.contract_name,
+                        contract_address: this.props.contract_address
+                        },
+                    true
+                    )
                 }
             }
         };
@@ -323,83 +360,6 @@ class VerifyBountiesContainter extends React.Component {
 
 }
 
-class WithdrawBountyCallReturnContainer extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.bountyId = this.bountyId.bind(this);
-    
-    }
-
-    bountyId(event){
-        event.preventDefault();
-        this.props.update(this.bountyI.value);
-    }
-
-    render() {
-        return (<div>
-             <p> BountyBalnace {this.props.result}</p>
-            <form onSubmit={this.bountyId}>
-                <FieldGroup
-                    id="bountyI"
-                    type="number"
-                    label="Bounty Id"
-                    placeholder="Bounty ID"
-                    inputRef={input => this.bountyI = input}
-                />
-                <Button type="submit">Withdraw Bounty</Button>
-            </form>
-        </div>)
-    }
-}
-
-class WithdrawBountiesContainter extends React.Component {
-    constructor(props) {
-        super(props);
-        this.props.contract.instance.vortexMethods.withdrawBounty.data(
-            1,
-            {from: this.props.web3.coinbase}
-        );
-        Vortex.get().subscribeEvent(
-            "BountyVerified", 
-            this.props.contract_name, 
-            this.props.contract_address);
-
-        const mapStateToProps = (state) => {
-            return {
-                result: callContract(getContract(state, 
-                    this.props.contract_name, 
-                    this.props.contract_address),
-                     "bountyBalance", 
-                     1,
-                     {from: this.props.web3.coinbase}),
-                update: (bountyId) => {
-                    this.props.contract.instance.vortexMethods.withdrawBounty.send(
-                         bountyId, {from: this.props.web3.coinbase, gas: 6654755}
-                    );
-                }
-            }
-        };
-        this.resultContainer = connect(VerifyBountyCallReturnContainer, mapStateToProps);
-    }
-
-    render() {
-        if (this.props.contract) {
-            return <Panel bsStyle="primary">
-                <Panel.Heading>Verify Bounty (customers only)</Panel.Heading>
-                <Panel.Body>
-                    <this.resultContainer/>
-                </Panel.Body>
-            </Panel>;
-        } else
-            return <div/>;
-    }
-
-}
-
-
-
-
 export class SmartBounties extends React.Component {
 
     render() {
@@ -410,8 +370,6 @@ export class SmartBounties extends React.Component {
                 <VortexContractsList element={BountiesContainter} contract_name="SmartBounty"/>
                 <VortexContractsList element={CompleteBountiesContainter} contract_name="SmartBounty"/>
                 <VortexContractsList element={VerifyBountiesContainter} contract_name="SmartBounty"/>
-                {/* <VortexContractsList element={WithdrawBountiesContainter} contract_name="SmartBounty"/>
-            */}
             </Panel.Body>
         </Panel>
 

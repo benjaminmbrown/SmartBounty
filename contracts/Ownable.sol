@@ -1,4 +1,4 @@
-pragma solidity ^0.4.19;
+pragma solidity ^0.4.24;
 /**
  * @title Ownable
  * @dev The Ownable contract has an owner address, and provides basic authorization control
@@ -22,7 +22,7 @@ contract Ownable {
    * @dev Throws if called by any account other than the owner.
    */
     modifier onlyOwner() {
-        require(msg.sender == owner);
+        require(msg.sender == owner, "owner is not the msg sender");
         _;
     }
 
@@ -31,10 +31,11 @@ contract Ownable {
    * @dev Allows the current owner to transfer control of the contract to a newOwner.
    * @param newOwner The address to transfer ownership to.
    */
-    function transferOwnership(address newOwner) public onlyOwner {
-        require(newOwner != address(0));
+    function transferOwnership(address newOwner) public onlyOwner returns(bool success) {
+        require(newOwner != address(0), "New owner is the coinbase of first account");
         emit OwnershipTransferred(owner, newOwner);
         owner = newOwner;
+        return true;
     }
 
 }

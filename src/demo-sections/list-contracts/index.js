@@ -49,10 +49,12 @@ class ContractsContainer extends React.Component {
     constructor(props) {
         super(props);
         this.props.contract.instance.vortexMethods.get.data({from: this.props.web3.coinbase});
+        
         Vortex.get().subscribeEvent(
-            "Test", 
+            "BountyCreated", 
             this.props.contract_name, 
             this.props.contract_address);
+
         const mapStateToProps = (state) => {
             return {
                 result: callContract(getContract(state, 

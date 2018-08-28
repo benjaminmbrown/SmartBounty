@@ -49,6 +49,7 @@
   },
   "dependencies": {
     "dotenv": "^2.0.0",
+    "ethereum-ens": "^0.7.4",
     "is-ipfs": "^0.3.2",
     "react": "^15.4.2",
     "react-bootstrap": "^0.32.1",
@@ -60,7 +61,8 @@
     "vort_x-components": "^1.1.0",
     "web3": "^1.0.0-beta.34",
     "webcrypto-shim": "^0.1.4",
-    "websocket": "^1.0.26"
+    "websocket": "^1.0.26",
+    "zos-lib": "^1.4.0"
   },
   "scripts": {
     "start": "node scripts/start.js",

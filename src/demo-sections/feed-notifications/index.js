@@ -69,7 +69,7 @@ const mapStateToProps = (state, ownProps) => {
     return {
         ...ownProps,
         feed: state.feed,
-        event_feed: getEvents(state, {contract_name: 'SimpleStorage', event_name: 'Test'})
+        event_feed: getEvents(state, {contract_name: 'SmartBounty', event_name: 'BountyTaken'})
     }
 };
 

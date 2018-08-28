@@ -28,7 +28,9 @@ class App extends Component {
                     preloaded_contracts: ["SmartBounty"],
                     network_contracts: [SmartBounty]
                 }}
+                
                 loader={VortexMetamaskLoader(Web3)}
+
                 ipfs_config={{
                     host: 'ipfs.infura.io',
                     port: '5001',
@@ -36,14 +38,14 @@ class App extends Component {
                         protocol: 'https'
                     }
                 }}
+
                 backlink_config={{
                     url: {
                         "mainnet": "wss://mainnet.infura.io/ws",
                         "default": "ws://localhost:8545/ws"
                     }
-                }}>
-
-
+                }}
+                >
                 <VortexWeb3Loaded>
                     <FeedNotifications>
                         <div className="App">
