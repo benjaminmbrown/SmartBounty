@@ -52,7 +52,6 @@ class _FeedNotifications extends React.Component {
                 DefaultStyle: {
                     wordWrap: 'break-word'
                 }
-
             }
         };
         return (<div>
@@ -69,7 +68,7 @@ const mapStateToProps = (state, ownProps) => {
     return {
         ...ownProps,
         feed: state.feed,
-        event_feed: getEvents(state, {contract_name: 'SmartBounty', event_name: 'BountyTaken'})
+        event_feed: getEvents(state, {contract_name: 'BountyHub', event_name: 'LogNewBounty'})
     }
 };
 

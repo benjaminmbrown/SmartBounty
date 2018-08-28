@@ -1,5 +1,5 @@
 {
-  "name": "SmartBounty",
+  "name": "ConsensysBountyProject",
   "version": "1.1.0",
   "devDependencies": {
     "autoprefixer": "6.5.1",
@@ -42,6 +42,7 @@
     "truffle-contract": "^1.1.8",
     "truffle-solidity-loader": "0.0.8",
     "url-loader": "0.5.7",
+    "web3": "^1.0.0-beta.35",
     "webpack": "1.14.0",
     "webpack-dev-server": "1.16.2",
     "webpack-manifest-plugin": "1.1.0",
@@ -59,7 +60,6 @@
     "react-sliding-pane": "^2.0.2",
     "vort_x": "^1.1.1",
     "vort_x-components": "^1.1.0",
-    "web3": "^1.0.0-beta.34",
     "webcrypto-shim": "^0.1.4",
     "websocket": "^1.0.26",
     "zos-lib": "^1.4.0"

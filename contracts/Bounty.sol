@@ -20,6 +20,7 @@ contract Bounty is Stoppable {
     uint    public fundsRaised;
     uint    public refunded;
     bool    public verified;
+    bool    public paid;
     
     struct FunderStruct {
         uint amountContributed;
@@ -37,6 +38,7 @@ contract Bounty is Stoppable {
     event LogRefundSent(address funder, uint amount);
     event LogWithdrawal(address beneficiary, uint amount); 
     event LogVerified(address sender); 
+    event LogClaimed(address sender, uint amount); 
 
     /** 
     * @author Benjamin M. Brown
@@ -66,7 +68,7 @@ contract Bounty is Stoppable {
     }
 
     /**
-      * @author Benjamin M. Brown
+    * @author Benjamin M. Brown
     * @dev Check if this bounty has failed.
     * @return A boolean expressing bounty failure if goal is not met before deadline
     */
@@ -81,7 +83,7 @@ contract Bounty is Stoppable {
 
 
     /**
-      * @author Benjamin M. Brown
+    * @author Benjamin M. Brown
     * @dev Apply contributions to this bounty
     * @return true if a contribution passes all requriements and is successfully applied
     */
@@ -130,10 +132,11 @@ contract Bounty is Stoppable {
     }
 
     /**
-       @author Benjamin M. Brown
+    @author Benjamin M. Brown
     @dev Allows a funder to request and receive a refund
     @return success if requirements pass and refund is sent
     */
+
     function requestRefund()
         public
         onlyIfRunning
@@ -151,17 +154,36 @@ contract Bounty is Stoppable {
 
     /**
     @author Benjamin M. Brown
-    @dev Allows a funder to request and receive a refund
-    @return success if requirements pass and refund is sent
+    @dev Allows a sponsor to verify a bounty claim
+    @return success if requirements pass and bounty is verified
     */
 
-    function verify()
+    function verify(address verifier)
     public
-    onlySponsor()
+
     returns (bool success){
-            
-        verified = true;
-        emit LogVerified(sender);
+        //require(verifier == sponsor, "not sponsor");
+        if(verifier == sponsor){
+            verified = true;
+            emit LogVerified(verifier);
+            return true;
+        }
+    }  
+
+     /**
+    @author Benjamin M. Brown
+    @dev Allows a verified bounty taker to claim his reward
+    @return success if requirements pass and refund is sent
+    */
+    
+    function claim(address claimTaker)
+    public
+    returns (bool success){
+        paid = true;
+        uint amount = address(this).balance;
+        claimTaker.transfer(amount);
+        emit LogClaimed(msg.sender, amount);
+        return true;
     }
     
 }

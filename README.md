@@ -45,11 +45,16 @@ For the front end, I am using ReactJS and a new library I came across called Vor
 
 ## Design thoughts
 
-Given another look at it in the future, I may prefer to move more of the verification of the process/states into the Bounty.sol contract instead of locating those functions in the hub.
+Given another look at it in the future, I may prefer to move more of the verification of the process/states into the Bounty.sol contract instead of locating those functions in the hub. I would like to implement contract interfaces toward some standard of smart contract bounties, since in the future a unified bounty standard could allow interoperability between bounty management platforms.
 
+For the states of the bounty, I could have used an ENUM or other common pattern to better represent the state flow.
 
 # Avoiding Common Attacks
 
-See Module 9 Lesson 3
+I took time to review code for common attacks including re-entrancy, overflow/underflow, and various race conditions based on the current knowledge from Consensys and other independent solidity resources. I have avoided using tx.origin and have made sure that sending money to bounty takers requires verification inside the bounty contract itself (which holds the funds)
 
-I took time to review code for common attacks including re-entrancy, overflow/underflow, and various race conditions based on the current knowledge from Consensys and other independent solidity resources.
+## Tests
+
+I have tested nearly every core function in both `BountyHub.sol` and `Bounty.sol` using mocha / truffle for testing. These smoke tests . In the future I would add closer to the metal unit tests as solidity tests.
+
+For the most part, I tested the initiation/completion/verification process against the emitted event logs.

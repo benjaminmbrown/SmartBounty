@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {VortexGate, VortexWeb3Loaded, VortexWeb3LoadError, VortexWeb3NetworkError, VortexWeb3Loading, VortexWeb3Locked, VortexMetamaskLoader} from "vort_x-components";
-import SmartBounty from '../build/contracts/SmartBounty.json'
+import BountyHub from '../build/contracts/BountyHub.json';
+import Bounty from '../build/contracts/Bounty.json';
 import {Grid, Col, Panel} from 'react-bootstrap';
 import Web3 from 'web3';
 
@@ -24,9 +25,9 @@ class App extends Component {
             <VortexGate
                 contracts={{
                     type: 'truffle',
-                    truffle_contracts: [SmartBounty],
-                    preloaded_contracts: ["SmartBounty"],
-                    network_contracts: [SmartBounty]
+                    truffle_contracts: [BountyHub, Bounty],
+                    preloaded_contracts: ["BountyHub", "Bounty"],
+                    network_contracts: [BountyHub, Bounty]
                 }}
                 
                 loader={VortexMetamaskLoader(Web3)}

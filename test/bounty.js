@@ -36,11 +36,7 @@ contract('Bounty', (accounts) => {
             } catch (error) {
                 assert(error.toString().includes('VM Exception'), error.toString())
             }
-
-
             assert.equal(await bounty.fundsRaised.call(), startFunds.toNumber()+contribution, "Contribution failed");
-       
-
         })
         it('should allow any other user to fund the bounty', async()=>{
             const contribution = 1e+18;
@@ -57,12 +53,5 @@ contract('Bounty', (accounts) => {
             assert.equal(await bounty.fundsRaised.call(), startFunds.toNumber()+contribution, "Contribution failed");
        
         })
-
-
-        
-  
     })
-
-
-
 });

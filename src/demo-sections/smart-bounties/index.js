@@ -52,6 +52,7 @@ class ContractCallReturnContainer extends React.Component {
                 <Button type="submit">Create </Button>
             </form>
             <h3>Bounty List
+                {this.props.bountyCount}
                 {this.props.bounties}
             </h3>
             <h3>Events:
@@ -75,11 +76,10 @@ class ContractsContainer extends React.Component {
 
         
         Vortex.get().subscribeEvent(
-            "BountyCreated", 
+            "LogNewBounty", 
             this.props.contract_name, 
             this.props.contract_address
         );
-
 
         const mapStateToProps = (state) => {
             console.log('State:',state);
@@ -95,10 +95,10 @@ class ContractsContainer extends React.Component {
                         {from: this.props.web3.coinbase, gas: 1030000}
                     );
                 },
-                bounties: callContract(getContract(state, 
+                bountyCount: callContract(getContract(state, 
                         this.props.contract_name, 
                         this.props.contract_address),
-                         "getAllBounties", 
+                         "getBountyCount", 
                          {from: this.props.web3.coinbase}),
                 events:()=>{
                     getEvents(state, {
@@ -366,10 +366,7 @@ export class SmartBounties extends React.Component {
         return <Panel>
             <Panel.Heading>Contracts</Panel.Heading>
             <Panel.Body>
-                <VortexContractsList element={ContractsContainer} contract_name="SmartBounty"/>
-                <VortexContractsList element={BountiesContainter} contract_name="SmartBounty"/>
-                <VortexContractsList element={CompleteBountiesContainter} contract_name="SmartBounty"/>
-                <VortexContractsList element={VerifyBountiesContainter} contract_name="SmartBounty"/>
+                <VortexContractsList element={ContractsContainer} contract_name="BountyHub"/>
             </Panel.Body>
         </Panel>
 

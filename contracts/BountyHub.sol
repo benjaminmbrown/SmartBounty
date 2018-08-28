@@ -40,6 +40,11 @@ contract BountyHub is Stoppable {
         _;
     }
 
+    modifier onlyVerified(address bounty){
+        require(bountyVerified[bounty] == true, "Bounty not completed yet");
+        _;
+    }
+
     modifier onlyNotVerified(address bounty){
         require(bountyVerified[bounty] == false, "Bounty already verified");
         _;
@@ -64,7 +69,7 @@ contract BountyHub is Stoppable {
     event LogBountyTaken(address addr, address bounty);
     event LogBountyCompleted(address addr, address bounty);
     event LogBountyVerified(address addr, address bounty);
-    event LogBountyWithdraw(address addr, address bounty);
+    event LogBountyClaimed(address addr, address bounty);
     
     /**
     * @author Benjamin M. Brown
@@ -113,20 +118,35 @@ contract BountyHub is Stoppable {
     onlyIfBounty(bounty)
     onlyCompleted(bounty)
     onlyNotVerified(bounty)
-    
-    returns (bool)
+    returns (bool success)
     {   
         Bounty trustedBounty = Bounty(bounty);
-
-       // require(trustedBounty.sponsor() == msg.sender, "Is not bounty sponsor");
         bountyVerified[bounty] = true;
         emit LogBountyVerified(msg.sender,bounty);
-        return true;
+        return trustedBounty.verify(msg.sender);
     }
+
+      /**
+    * @author Benjamin M. Brown
+    * @dev bounty taker can claim his bounty for completed & verified bounties
+    * @param bounty Address of bounty itself
+    */
+    function claimBounty(address bounty)
+    public 
+    onlyIfBounty(bounty)
+    onlyVerified(bounty)
+    hasTakenBounty(bounty,msg.sender)
+    returns (bool success)
+    {   
+        Bounty trustedBounty = Bounty(bounty);
+        emit LogBountyClaimed(msg.sender,bounty);
+        return trustedBounty.claim(msg.sender);
+    }
+
 
     /** 
     * @author Benjamin M. Brown
-    * @dev Constructor that sets the bounty's attributes.
+    * @dev Get's count of bounties in hub.
     * @return uint bountyCount The current length of bounties array
     */
 
